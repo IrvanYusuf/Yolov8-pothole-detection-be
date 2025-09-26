@@ -10,13 +10,13 @@ import numpy as np
 
 
 cloudinary.config(
-    cloud_name="dfsozazph",
-    api_key="957981467851439",
-    api_secret="2m2EanObqtrcCkvxxmprwpl9Fis",
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
     secure=True
 )
 
-
+# load yolo model
 model = YOLO("lib/model-yolo/best.pt")
 
 

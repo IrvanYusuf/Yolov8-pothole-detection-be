@@ -7,10 +7,13 @@ from fastapi.responses import JSONResponse
 import bisect
 from fastapi.middleware.cors import CORSMiddleware
 import uuid
+from dotenv import load_dotenv
 from controllers.detection_controller import DetectionController
 
 
 app = FastAPI()
+
+load_dotenv()
 
 origins = [
     "*",
