@@ -6,12 +6,24 @@ from fastapi import FastAPI, UploadFile, Form, HTTPException
 from fastapi.responses import JSONResponse
 import bisect
 from fastapi.middleware.cors import CORSMiddleware
-import uuid
+from database.db import create_db_and_tables
 from dotenv import load_dotenv
 from controllers.detection_controller import DetectionController
+from contextlib import asynccontextmanager
+from routers.api_routes import router as api_index_router
+from fastapi.exceptions import RequestValidationError
+from handler.error_handler import validation_exception_handler
 
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("Application is starting up...")
+    create_db_and_tables()
+    yield
+    print("Application is shutting down...")
+
+
+app = FastAPI(lifespan=lifespan)
 
 load_dotenv()
 
@@ -26,6 +38,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(api_index_router, prefix="/api")
+
 
 output_dir = "frames_output"
 os.makedirs(output_dir, exist_ok=True)
@@ -157,3 +172,6 @@ async def detection_image(image: UploadFile,
                           latitude: float = Form(...),
                           longitude: float = Form(...),):
     return await DetectionController.detection_image(image, latitude, longitude)
+
+
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
