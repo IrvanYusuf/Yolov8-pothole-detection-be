@@ -5,6 +5,9 @@ class Hasher():
     @staticmethod
     def verify_password(plain_password, hashed_password):
         passBytes = plain_password.encode('utf-8')
+        if isinstance(hashed_password, str):
+            hashed_password = hashed_password.encode('utf-8')
+
         return bcrypt.checkpw(passBytes, hashed_password)
 
     @staticmethod
