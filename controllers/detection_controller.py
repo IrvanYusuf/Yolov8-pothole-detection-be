@@ -1,12 +1,14 @@
 from fastapi import UploadFile, Form, HTTPException
 import cloudinary
 import cloudinary.uploader
-import io
 from ultralytics import YOLO
 import tempfile
 import cv2
 import os
 import numpy as np
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 cloudinary.config(
